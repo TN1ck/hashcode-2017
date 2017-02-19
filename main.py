@@ -29,8 +29,8 @@ def parse_file(file_path):
             current = 0
             for slot in row:
                 if slot is False and current > 0:
-                    current = 0
                     new_row.append(current)
+                    current = 0
                 elif slot is not False:
                     current += 1
             if current > 0:
