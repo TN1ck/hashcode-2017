@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 from functools import reduce
+from main import parse_file
+import random
+
 def sort_servers_into_pools(server_list, num_pools):
     print("number of servers", len(server_list))
     large_servers_first = list(reversed(sorted(server_list)))
@@ -87,8 +90,8 @@ def sort_servers_into_pools_greedy(server_list, num_pools):
         i += 1
     return pools
 
-#data_struct = parse_file('./testfile')
-#sort_servers_into_pools_2(data_struct['servers'], data_struct['pools'])
+data_struct = parse_file('./testfile')
+sort_servers_into_pools_greedy(data_struct['servers'], data_struct['pools'])
 
 
 pools = sort_servers_into_pools([[1,1],[6,1],[6,1],[4,1],[8,1],[1,1],[8,1],[7,1],[5,1],[8,1],[8,1],[6,1],[18,1],[20,1],[13,1],[4,1]], 3)
