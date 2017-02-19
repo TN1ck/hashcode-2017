@@ -3,6 +3,7 @@ from functools import reduce
 from main import parse_file
 import random
 
+
 def sort_servers_into_pools(server_list, num_pools):
     print("number of servers", len(server_list))
     large_servers_first = list(reversed(sorted(server_list)))
@@ -16,7 +17,6 @@ def sort_servers_into_pools(server_list, num_pools):
             pools[i][j].append(i)
             pools[i][j] = tuple(pools[i][j])
     return pools
-
 
 
 def allocate_servers_to_rows(pools, rows):
@@ -83,6 +83,7 @@ def sort_servers_into_pools_greedy(server_list, num_pools):
     pools = [[] for i in range(num_pools)]
     for i in range(len(server_list)):
         pools[i % num_pools].append(server_list[i])
+    get_pools_stats(pools)    
     i = 0
     while i < 10:
         pools = update_pools_by_capacity(pools)
@@ -90,9 +91,15 @@ def sort_servers_into_pools_greedy(server_list, num_pools):
         i += 1
     return pools
 
-data_struct = parse_file('./testfile')
-sort_servers_into_pools_greedy(data_struct['servers'], data_struct['pools'])
+def get_pools_stats(pools):
+    for p in pools:
+        print(sum_capacity(p))
 
+
+data_struct = parse_file('./testfile')
+pools = sort_servers_into_pools_greedy(data_struct['servers'], data_struct['pools'])
+print('#############')
+get_pools_stats(pools)
 
 pools = sort_servers_into_pools([[1,1],[6,1],[6,1],[4,1],[8,1],[1,1],[8,1],[7,1],[5,1],[8,1],[8,1],[6,1],[18,1],[20,1],[13,1],[4,1]], 3)
 print("pools", pools)
