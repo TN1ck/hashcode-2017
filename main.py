@@ -1,3 +1,5 @@
+import naive_max_solution
+
 def parse_file(file_path):
     with open(file_path, 'r') as f:
         lines = [line.rstrip('\n') for line in f]
@@ -58,10 +60,22 @@ def parse_file(file_path):
             'servers': parsed_servers_to_be_allocated
         }
 
+def get_solution(parsed_data_structure):
+    max_servers = []
+    for server in parsed_data_structure['servers']:
+        max_servers.append([server['size'], server['capacity']])
+    pool_allocation = naive_max_solution.sort_servers_into_pools(max_servers, parsed_data_structure['pools'])
+    row_allocation = naive_max_solution.allocate_servers_to_rows(pool_allocation, parsed_data_structure['rows'])
+    return row_allocation
+
 def __main__():
     print('HASHCODE 2015\n')
     parsed_data_structure = parse_file('./testfile')
     print('parsed file', parsed_data_structure)
+    final_allocation = get_solution(parsed_data_structure)
+    print("final_allocation", final_allocation)
+
+
 
 
 __main__()
