@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from functools import reduce
-from main import parse_file
+# from main import parse_file
 import random
 
 def sort_servers_into_pools(server_list, num_pools):
@@ -64,7 +64,7 @@ def update_pools_by_count(pools):
     pool1 = pools[0]
     pool2 = pools[-1]
     min_server = min(pool1, key=lambda s: s['capacity'])
-    pool2 += [min_server] 
+    pool2 += [min_server]
     pool1.remove(min_server)
     return pools
 
@@ -90,23 +90,23 @@ def sort_servers_into_pools_greedy(server_list, num_pools):
         i += 1
     return pools
 
-data_struct = parse_file('./testfile')
-sort_servers_into_pools_greedy(data_struct['servers'], data_struct['pools'])
+# data_struct = parse_file('./testfile')
+# sort_servers_into_pools_greedy(data_struct['servers'], data_struct['pools'])
 
 
-pools = sort_servers_into_pools([[1,1],[6,1],[6,1],[4,1],[8,1],[1,1],[8,1],[7,1],[5,1],[8,1],[8,1],[6,1],[18,1],[20,1],[13,1],[4,1]], 3)
-print("pools", pools)
-rows = [
-        [20],
-        [10,10],
-        [8,6,3],
-        [3,10],
-        [18]
-    ]
-
-allocation = allocate_servers_to_rows(pools, rows)
-num_all_servers = 0
-for i in range(len(allocation)):
-    for j in range(len(allocation[i])):
-        num_all_servers += len(allocation[i][j])
-print("allocated items", num_all_servers, "allocation", allocation)
+# pools = sort_servers_into_pools([[1,1],[6,1],[6,1],[4,1],[8,1],[1,1],[8,1],[7,1],[5,1],[8,1],[8,1],[6,1],[18,1],[20,1],[13,1],[4,1]], 3)
+# print("pools", pools)
+# rows = [
+#         [20],
+#         [10,10],
+#         [8,6,3],
+#         [3,10],
+#         [18]
+#     ]
+#
+# allocation = allocate_servers_to_rows(pools, rows)
+# num_all_servers = 0
+# for i in range(len(allocation)):
+#     for j in range(len(allocation[i])):
+#         num_all_servers += len(allocation[i][j])
+# print("allocated items", num_all_servers, "allocation", allocation)
