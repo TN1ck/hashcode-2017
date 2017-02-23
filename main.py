@@ -94,11 +94,14 @@ def read_file(file_path):
             [video_id, endpoint_id, number_of_requests] = [int(x) for x in request_line.split(' ')]
             request_list.append(Request(video_id, endpoint_id, number_of_requests))
 
+        cache_servers = [CacheServer(cache_server_capacity) for _ in range(cache_servers)]
+
         return {
             'videos': video_list,
             'endpoints': endpoint_list,
             'requests': request_list,
-            'cache_server_capacity': cache_server_capacity
+            'cache_server_capacity': cache_server_capacity,
+            'cache_servers': cache_servers
         }
 
 def write_file(pizza, filename):
