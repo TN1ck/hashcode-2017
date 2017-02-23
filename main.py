@@ -111,6 +111,7 @@ class CacheServer(object):
     def score(self, videos):
         result = 0
         for endpoint in self.endpoints:
+            print('endpoint {} {}'.format(endpoint.id, len(self.endpoints)), flush=True)
             videos_ratio = 0
             for request in endpoint.requests:
                 video = videos[request.video_id]
@@ -142,9 +143,13 @@ def normalize(values):
 
 
 def solve(videos, endpoints, requests, cache_servers, cache_server_capacity):
-    sorted_cache_servers = sorted(cache_servers, key=lambda c: -c.score(videos))
-    print(sorted_cache_servers, [c.score(videos) for c in sorted_cache_servers])
+    print('start sorting servers')
+    # sorted_cache_servers = sorted(cache_servers, key=lambda c: -c.score(videos))
+    sorted_cache_servers = cache_servers
+    print('finish sorting servers')
+    # print(sorted_cache_servers, [c.score(videos) for c in sorted_cache_servers])
     for cache_server in sorted_cache_servers:
+        print('{} {}'.format(cache_server.id, len(cache_servers)), sep=' ', end='', flush=True)
         video_sum = 0
         video_score = [0 for i in videos]
         for endpoint in cache_server.endpoints:
@@ -157,7 +162,7 @@ def solve(videos, endpoints, requests, cache_servers, cache_server_capacity):
         sorted_video_score_enumerated = sorted(video_score_enumerated, key=lambda x: -x[1])
 
         cache_filled_status = 0
-        print(video_score)
+        # print(video_score)
         for (index, score) in sorted_video_score_enumerated:
             video = videos[index]
             if (cache_filled_status + video.size > cache_server.size):
@@ -220,19 +225,23 @@ def read_file(file_path):
             request_list.append(request)
 
         # normalize endpoints latency to datacenter
+        print('normalize endpoints')
         latency_sum = sum([endpoint.latency_to_datacenter for endpoint in endpoint_list])
         for endpoint in endpoint_list:
             endpoint.normalize_latency(latency_sum)
 
         # normalize videos
+        print('normalize videos')
         videos_size_sum = sum([video.size for video in video_list])
         for video in video_list:
             video.normalize_size(videos_size_sum)
 
         # normalize popularity of videos
+        print('normalize requests')
         request_sum = sum([request.number_of_requests for request in request_list])
         for request in request_list:
             request.normalize_number_of_requests(request_sum)
+        print('finished normalizing')
 
         return {
             'videos': video_list,
