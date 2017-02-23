@@ -19,27 +19,35 @@ class Video(object):
 
     def __init__(self, id, size):
         self.id = id
+        self.requests = []
         self.size = size
 
     def __str__(self):
-        return '{} - size({})'.format(self.id, self.size)
+        return '{} - size({}) request({})'.format(self.id, self.size, len(self.requests))
 
     def __repr__(self):
         return self.__str__()
+
+    def append_request(self, request):
+        self.requests.append(request)
 
 class Endpoint(object):
 
     def __init__(self, id, latency_to_datacenter, cache_servers_with_latency):
         self.id = id
+        self.requests = []
         self.latency_to_datacenter = latency_to_datacenter
         self.cache_servers_with_latency = cache_servers_with_latency
 
     def __str__(self):
-        return '{} - latency({}) caches({})'\
-            .format(self.id, self.latency_to_datacenter, len(self.cache_servers_with_latency))
+        return '{} - latency({}) caches({}) requests({})'\
+            .format(self.id, self.latency_to_datacenter, len(self.cache_servers_with_latency), len(self.requests))
 
     def __repr__(self):
         return self.__str__()
+
+    def append_request(self, request):
+        self.requests.append(request)
 
 class CacheServer(object):
 
@@ -67,6 +75,17 @@ class Request(object):
 
     def __repr__(self):
         return self.__str__()
+
+def normalize(values):
+    sum_values = sum(values)
+    return [value/sum_values for value in values]
+
+
+
+def solve(videos, endpoints, requests, cache_server_capacity, cache_servers):
+    pass
+
+
 
 def read_file(file_path):
     """Read input file"""
@@ -102,7 +121,10 @@ def read_file(file_path):
         request_list = []
         for request_line in lines[current_index:]:
             [video_id, endpoint_id, number_of_requests] = [int(x) for x in request_line.split(' ')]
-            request_list.append(Request(video_id, endpoint_id, number_of_requests))
+            request = Request(video_id, endpoint_id, number_of_requests)
+            video_list[video_id].append_request(request)
+            endpoint_list[endpoint_id].append_request(request)
+            request_list.append(request)
 
         cache_servers = [CacheServer(i, cache_server_capacity) for i in range(cache_servers)]
 
