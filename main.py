@@ -266,10 +266,10 @@ def main():
 if __name__ == '__main__':
     print('HASHCODE - TU_DUDES')
     print('running python {}'.format(sys.version_info.major))
-    # main()
-    result = read_file('example.in')
-    print(result)
-    cache_servers = solve(result['videos'], result['endpoints'], result['requests'], result['cache_servers'], result['cache_server_capacity'])
-    print([cache_server.videos for cache_server in cache_servers])
-    write_file(cache_servers, 'wurst.out')
+    main()
+    # result = read_file('example.in')
+    # # print(result)
+    # cache_servers = solve(result['videos'], result['endpoints'], result['requests'], result['cache_servers'], result['cache_server_capacity'])
+    # # print([cache_server.videos for cache_server in cache_servers])
+    # write_file(cache_servers, 'wurst.out')
 
