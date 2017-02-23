@@ -11,8 +11,6 @@
 """Google Hash Code 2017"""
 
 import sys
-import numpy as np
-
 
 class Video(object):
     """A video to be cached"""
