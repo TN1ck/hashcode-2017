@@ -213,7 +213,9 @@ def read_file(file_path):
         for request_line in lines[current_index:]:
             [video_id, endpoint_id, number_of_requests] = [int(x) for x in request_line.split(' ')]
             request = Request(video_id, endpoint_id, number_of_requests)
-            video_list[video_id].append_request(request)
+            video = video_list[video_id]
+            if video.size <= cache_server_capacity:
+                video.append_request(request)
             endpoint_list[endpoint_id].append_request(request)
             request_list.append(request)
 
@@ -267,7 +269,7 @@ if __name__ == '__main__':
     # main()
     result = read_file('example.in')
     print(result)
-    cache_server = solve(result['videos'], result['endpoints'], result['requests'], result['cache_servers'], result['cache_server_capacity'])
-    print(cache_server)
-    write_file(cache_server, 'wurst.out')
+    cache_servers = solve(result['videos'], result['endpoints'], result['requests'], result['cache_servers'], result['cache_server_capacity'])
+    print([cache_server.videos for cache_server in cache_servers])
+    write_file(cache_servers, 'wurst.out')
 
