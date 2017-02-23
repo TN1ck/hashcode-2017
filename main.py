@@ -17,32 +17,42 @@ import numpy as np
 class Video(object):
     """A video to be cached"""
 
-    def __init__(self, size):
+    def __init__(self, id, size):
+        self.id = id
         self.size = size
 
     def __str__(self):
-        return 'size({})'.format(self.size)
+        return '{} - size({})'.format(self.id, self.size)
 
     def __repr__(self):
         return self.__str__()
 
 class Endpoint(object):
 
-    def __init__(self, latency_to_datacenter, cache_servers_with_latency):
+    def __init__(self, id, latency_to_datacenter, cache_servers_with_latency):
+        self.id = id
         self.latency_to_datacenter = latency_to_datacenter
         self.cache_servers_with_latency = cache_servers_with_latency
 
     def __str__(self):
-        return 'latency({}) caches({})'\
-            .format(self.latency_to_datacenter, len(self.cache_servers_with_latency))
+        return '{} - latency({}) caches({})'\
+            .format(self.id, self.latency_to_datacenter, len(self.cache_servers_with_latency))
 
     def __repr__(self):
         return self.__str__()
 
 class CacheServer(object):
 
-    def __init__(self, size):
+    def __init__(self, id, size):
+        self.id = id
         self.size = size
+
+    def __str__(self):
+        return '{} - size({})'\
+            .format(self.id, self.size)
+
+    def __repr__(self):
+        return self.__str__()
 
 class Request(object):
 
@@ -69,7 +79,7 @@ def read_file(file_path):
         ))
 
         video_sizes = lines[1]
-        video_list = [Video(int(x)) for x in video_sizes.split(' ')]
+        video_list = [Video(i, int(x)) for (i, x) in enumerate(video_sizes.split(' '))]
 
         endpoint_list = []
         # keeps track of the last index, which is needed for the video parsing
@@ -87,14 +97,14 @@ def read_file(file_path):
                     'latency': latency
                 })
                 current_index += 1
-            endpoint_list.append(Endpoint(latency_to_datacenter, connected_caches))
+            endpoint_list.append(Endpoint(i, latency_to_datacenter, connected_caches))
 
         request_list = []
         for request_line in lines[current_index:]:
             [video_id, endpoint_id, number_of_requests] = [int(x) for x in request_line.split(' ')]
             request_list.append(Request(video_id, endpoint_id, number_of_requests))
 
-        cache_servers = [CacheServer(cache_server_capacity) for _ in range(cache_servers)]
+        cache_servers = [CacheServer(i, cache_server_capacity) for i in range(cache_servers)]
 
         return {
             'videos': video_list,
@@ -129,6 +139,6 @@ if __name__ == '__main__':
     print('HASHCODE - TU_DUDES')
     print('running python {}'.format(sys.version_info.major))
     # main()
-    result = read_file('kittens.in')
+    result = read_file('example.in')
     print(result)
 
