@@ -64,7 +64,6 @@ class Endpoint(object):
         self.id = id
         self.requests = []
         self.cache_servers_with_latency_norm = []
-        self.get_cache_server_latency_norm_cache = {}
         self.latency_to_datacenter_norm = None
         self.latency_to_datacenter = latency_to_datacenter
         self.cache_servers_with_latency = cache_servers_with_latency
@@ -88,11 +87,7 @@ class Endpoint(object):
         return [cache_server['latency'] for cache_server in self.cache_servers_with_latency if cache_server_id == cache_server['cache_id']][0]
 
     def get_cache_server_latency_norm (self, cache_server_id):
-        if cache_server_id in self.get_cache_server_latency_norm_cache:
-            return self.get_cache_server_latency_norm_cache[cache_server_id]
-        result = [cache_server['latency_norm'] for cache_server in self.cache_servers_with_latency_norm if cache_server_id == cache_server['cache_id']][0]
-        self.get_cache_server_latency_norm_cache[cache_server_id] = result
-        return result
+        return [cache_server['latency_norm'] for cache_server in self.cache_servers_with_latency_norm if cache_server_id == cache_server['cache_id']][0]
 
     def remove_requests(self, video_id):
         self.requests = [request for request in self.requests if request.video_id != video_id]
@@ -124,7 +119,7 @@ class CacheServer(object):
     def score(self, videos):
         result = 0
         for endpoint in self.endpoints:
-            # print('endpoint {} {}'.format(endpoint.id, len(self.endpoints)), flush=True)
+            print('endpoint {} {}'.format(endpoint.id, len(self.endpoints)), flush=True)
             videos_ratio = 0
             for request in endpoint.requests:
                 video = videos[request.video_id]
@@ -157,8 +152,8 @@ def normalize(values):
 
 def solve(videos, endpoints, requests, cache_servers, cache_server_capacity):
     print('start sorting servers')
-    sorted_cache_servers = sorted(cache_servers, key=lambda c: -c.score(videos))
-    # sorted_cache_servers = cache_servers
+    # sorted_cache_servers = sorted(cache_servers, key=lambda c: -c.score(videos))
+    sorted_cache_servers = cache_servers
     print('finish sorting servers')
     # print(sorted_cache_servers, [c.score(videos) for c in sorted_cache_servers])
     for cache_server in sorted_cache_servers:
